@@ -1,7 +1,6 @@
 package com.processmanager.impl;
 
 import com.processmanager.core.LogManager;
-import com.processmanager.exception.LogCollectionException;
 import com.processmanager.model.LogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -214,20 +212,20 @@ public class ProcessLogManagerImpl implements LogManager {
      * Determines if a log entry should be included based on current log level.
      */
     private boolean shouldIncludeLogEntry(LogEntry entry, LogLevel currentLevel) {
-        return entry.getLevel().ordinal() >= currentLevel.ordinal();
+        return entry.level().ordinal() >= currentLevel.ordinal();
     }
     
     /**
      * Forwards log entry to SLF4J logger.
      */
     private void forwardToSlf4j(LogEntry entry) {
-        Logger processLogger = LoggerFactory.getLogger("ProcessLog." + entry.getSource());
+        Logger processLogger = LoggerFactory.getLogger("ProcessLog." + entry.source());
         
         String message = String.format("[%s] %s", 
-                                     entry.getMetadata().getOrDefault("logger", "Unknown"), 
-                                     entry.getMessage());
+                                     entry.metadata().getOrDefault("logger", "Unknown"),
+                                     entry.message());
         
-        switch (entry.getLevel()) {
+        switch (entry.level()) {
             case TRACE:
                 processLogger.trace(message);
                 break;

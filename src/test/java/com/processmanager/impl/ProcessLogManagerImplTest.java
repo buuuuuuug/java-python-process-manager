@@ -115,17 +115,17 @@ class ProcessLogManagerImplTest {
         assertThat(logEntries).isNotEmpty();
         
         // Should contain various log levels (at least INFO level entries)
-        assertThat(logEntries).anyMatch(entry -> entry.getLevel() == LogLevel.INFO);
+        assertThat(logEntries).anyMatch(entry -> entry.level() == LogLevel.INFO);
         
         // Should contain some expected messages from the test script
         assertThat(logEntries).anyMatch(entry -> 
-            entry.getMessage().contains("info message") || 
-            entry.getMessage().contains("warning message") ||
-            entry.getMessage().contains("error message"));
+            entry.message().contains("info message") ||
+            entry.message().contains("warning message") ||
+            entry.message().contains("error message"));
         
         // Print entries for debugging
         System.out.println("Collected log entries:");
-        logEntries.forEach(entry -> System.out.println("  " + entry.getLevel() + ": " + entry.getMessage()));
+        logEntries.forEach(entry -> System.out.println("  " + entry.level() + ": " + entry.message()));
     }
     
     @Test
@@ -143,15 +143,15 @@ class ProcessLogManagerImplTest {
         // Then
         // Should have structured log entries with metadata
         assertThat(logEntries).anyMatch(entry -> 
-            entry.getMetadata().containsKey("logger") && 
-            entry.getMetadata().get("logger").equals("TestLogger"));
+            entry.metadata().containsKey("logger") &&
+            entry.metadata().get("logger").equals("TestLogger"));
         
         // Should have proper timestamps
-        assertThat(logEntries).allMatch(entry -> entry.getTimestamp() != null);
+        assertThat(logEntries).allMatch(entry -> entry.timestamp() != null);
         
         // Should have proper sources
-        assertThat(logEntries).anyMatch(entry -> "stdout".equals(entry.getSource()));
-        assertThat(logEntries).anyMatch(entry -> "stderr".equals(entry.getSource()));
+        assertThat(logEntries).anyMatch(entry -> "stdout".equals(entry.source()));
+        assertThat(logEntries).anyMatch(entry -> "stderr".equals(entry.source()));
     }
     
     @Test
@@ -172,7 +172,7 @@ class ProcessLogManagerImplTest {
         
         // Print entries for debugging
         System.out.println("Plain text test - Collected log entries:");
-        logEntries.forEach(entry -> System.out.println("  " + entry.getLevel() + ": " + entry.getMessage()));
+        logEntries.forEach(entry -> System.out.println("  " + entry.level() + ": " + entry.message()));
     }
     
     @Test
@@ -196,7 +196,7 @@ class ProcessLogManagerImplTest {
         // Then - should have entries of WARN level and above
         // Note: Some entries might have been collected before level change
         assertThat(logEntries).anyMatch(entry -> 
-            entry.getLevel() == LogLevel.WARN || entry.getLevel() == LogLevel.ERROR);
+            entry.level() == LogLevel.WARN || entry.level() == LogLevel.ERROR);
     }
     
     @Test
