@@ -230,11 +230,10 @@ public class ProcessMetricsCollector {
      * Gets system memory information.
      */
     public SystemMemoryInfo getSystemMemoryInfo() {
-        if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
-            com.sun.management.OperatingSystemMXBean sunBean = (com.sun.management.OperatingSystemMXBean) osBean;
+        if (osBean instanceof com.sun.management.OperatingSystemMXBean sunBean) {
             return new SystemMemoryInfo(
-                sunBean.getTotalPhysicalMemorySize(),
-                sunBean.getFreePhysicalMemorySize(),
+                    sunBean.getTotalMemorySize(),
+                    sunBean.getFreeMemorySize(),
                 sunBean.getTotalSwapSpaceSize(),
                 sunBean.getFreeSwapSpaceSize()
             );
